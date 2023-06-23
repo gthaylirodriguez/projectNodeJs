@@ -32,16 +32,36 @@ var controller = {
     },
 
     crear_usuario: function (req, res){
-        console.log("Nombre" + req.body.usuario_id)
-        
-        //Validamos los datos que se envian al endpoint
-        const errors = validationResult(req);
+                //Validamos los datos que se envian al endpoint
+                const errors = validationResult(req);
         if(!errors.isEmpty()){
             return res.status(400).json({errors: errors.array()})
         }
 
         let info_usuario = req.body;
-        console.log(info_usuario);
+
+        Usuarios.findOne({usuario_id:  info_usuario.usuario_id}).exec((err, usuario)=>{
+            if (err) return res.status(500).json({ status: 500,  mensaje: err  });
+            if (usuario) return res.status(200).json({ status: 200,  mensaje: "Ya existe el usuario." });
+
+            let usuario_model = new Usuarios;
+            usuario_model.usuario_id = info_usuario.usuario_id;
+            usuario_model.nombre = info_usuario.nombre;
+            usuario_model.email = info_usuario.email;
+            usuario_model.edad = info_usuario.edad;
+            usuario_model.pass = info_usuario.pass;
+
+            usuario_model.save((err, usuarioStored)=>{
+                if (err) return res.status(500).json({ status: 500,  mensaje: err  });
+                if (!usuarioStored) return res.status(200).json({ status: 200,  mensaje: "Error al guardar usuario" });
+                
+            });
+
+            return res.status(200).json({
+                status: 200,
+                message: "Usuario Almacenado"
+            });
+        });
 
     }
 };
