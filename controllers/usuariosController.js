@@ -96,7 +96,9 @@ var controller = {
     },
 
     eliminar_usuario: function(req, res){
+        console.log(req.params.filtro);
         let filtro = req.params.filtro;
+        if (!req.params) return res.status(400).json({message: 'Por favor, agregar el ID del usuario a eliminar'}); 
         Usuarios.findOneAndRemove({usuario_id: filtro}, (err, usuarioEliminar)=>{
             if (err) return res.status(500).json({message: 'Error al eliminar.'});
             if (!usuarioEliminar) return res.status(404).json({message: 'No se puede eliminar un usuario inexistente.'});

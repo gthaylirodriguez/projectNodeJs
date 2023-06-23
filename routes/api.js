@@ -25,4 +25,7 @@ api.put("/usuario/:filtro",[
                 ], UsuariosController.actualizar_usuario);
 
 api.delete("/usuario/:filtro", UsuariosController.eliminar_usuario);
- module.exports = api;
+
+api.post("/login", UsuariosController.crear_usuario);
+api.post("/logout", UsuariosController.crear_usuario);
+module.exports = api;
