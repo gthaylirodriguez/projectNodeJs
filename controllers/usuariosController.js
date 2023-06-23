@@ -66,7 +66,7 @@ var controller = {
     },
 
 
-     actualizar_usuario: function (req, res){
+    actualizar_usuario: function (req, res){
         const errors = validationResult(req);
         if(!errors.isEmpty()){
             return res.status(400).json({errors: errors.array()})
@@ -93,7 +93,21 @@ var controller = {
             })
         });
         console.log(info_usuario);
-     }
+    },
+
+    eliminar_usuario: function(req, res){
+        let filtro = req.params.filtro;
+        Usuarios.findOneAndRemove({usuario_id: filtro}, (err, usuarioEliminar)=>{
+            if (err) return res.status(500).json({message: 'Error al eliminar.'});
+            if (!usuarioEliminar) return res.status(404).json({message: 'No se puede eliminar un usuario inexistente.'});
+            
+            return res.status(200).json({
+                status: 200,
+                message: "Usuario Eliminado"
+            });
+        });
+    }
+
 };
 
 module.exports = controller;

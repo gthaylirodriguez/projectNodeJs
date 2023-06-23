@@ -23,4 +23,6 @@ api.put("/usuario/:filtro",[
                     body('email').not().isEmpty(),
                     body('pass').not().isEmpty()
                 ], UsuariosController.actualizar_usuario);
+
+api.delete("/usuario/:filtro", UsuariosController.eliminar_usuario);
  module.exports = api;
