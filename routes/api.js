@@ -17,4 +17,10 @@ api.post("/usuario",[
                     body('email').not().isEmpty(),
                     body('pass').not().isEmpty()
                 ], UsuariosController.crear_usuario);
+api.put("/usuario/:filtro",[
+                    body('nombre').not().isEmpty(),
+                    body('edad').not().isEmpty(),
+                    body('email').not().isEmpty(),
+                    body('pass').not().isEmpty()
+                ], UsuariosController.actualizar_usuario);
  module.exports = api;

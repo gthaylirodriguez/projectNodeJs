@@ -33,7 +33,7 @@ var controller = {
 
     crear_usuario: function (req, res){
                 //Validamos los datos que se envian al endpoint
-                const errors = validationResult(req);
+        const errors = validationResult(req);
         if(!errors.isEmpty()){
             return res.status(400).json({errors: errors.array()})
         }
@@ -63,7 +63,37 @@ var controller = {
             });
         });
 
-    }
+    },
+
+
+     actualizar_usuario: function (req, res){
+        const errors = validationResult(req);
+        if(!errors.isEmpty()){
+            return res.status(400).json({errors: errors.array()})
+        }
+        let filtro = req.params.filtro;
+        let info_usuario = req.body;
+
+        let info_usuario_update = {
+            nombre: info_usuario.nombre,
+            edad: info_usuario.edad,
+            email: info_usuario.email, 
+            pass: info_usuario.pass
+        };
+
+        Usuarios.findOneAndUpdate({usuario_id: filtro},info_usuario_update,{new:true} , (err, usuarioUpdate)=>{
+            if (err) return res.status(500).json({message: 'Error al actualizar.'});
+            if (!usuarioUpdate) return res.status(404).json({message: 'No existe el usuario.'});
+
+            return res.status(200).json({
+                nombre: usuarioUpdate.nombre,
+                edad: usuarioUpdate.edad,
+                email: usuarioUpdate.email, 
+                pass: usuarioUpdate.pass
+            })
+        });
+        console.log(info_usuario);
+     }
 };
 
 module.exports = controller;
