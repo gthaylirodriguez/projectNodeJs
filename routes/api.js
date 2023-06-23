@@ -1,21 +1,20 @@
 'use strict'
 const express = require('express');
 const api = express.Router();
+const {body} = require('express-validator');
 
 var WelcomeController = require('../controllers/welcome');
-var UserProjectController = require('../controllers/userProjectController');
+var UsuariosController = require('../controllers/usuariosController');
 
 
 api.get("/", WelcomeController.welcome);
-
-api.get("/usuarios", UserProjectController.usuarios);
-
-/*api.get("/alumno", WelcomeController.alumno );
-
-api.post("/alumno", WelcomeController.crear_alumno);
-
-api.delete("/alumno", (req, res)=>{
-    res.send("Eliminamos un alumno");
-});*/
-
+api.get("/usuarios", UsuariosController.usuarios);
+api.get("/usuario/:filtro", UsuariosController.usuario);
+api.post("/usuario",[
+                    body('usuario_id').not().isEmpty(),
+                    body('nombre').not().isEmpty(),
+                    body('edad').not().isEmpty(),
+                    body('email').not().isEmpty(),
+                    body('pass').not().isEmpty()
+                ], UsuariosController.crear_usuario);
  module.exports = api;
