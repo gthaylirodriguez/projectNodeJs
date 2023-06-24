@@ -5,12 +5,14 @@ const {body} = require('express-validator');
 
 var WelcomeController = require('../controllers/welcome');
 var UsuariosController = require('../controllers/usuariosController');
+let AuthController = require('../controllers/authController');
 
+let userProtectUrl = require('../middlewares/authUsuario').userProtectUrl;
 
 api.get("/", WelcomeController.welcome);
 api.get("/usuarios", UsuariosController.usuarios);
 api.get("/usuario/:filtro", UsuariosController.usuario);
-api.post("/usuario",[
+api.post("/usuario",userProtectUrl, [
                     body('usuario_id').not().isEmpty(),
                     body('nombre').not().isEmpty(),
                     body('edad').not().isEmpty(),
@@ -26,6 +28,9 @@ api.put("/usuario/:filtro",[
 
 api.delete("/usuario/:filtro", UsuariosController.eliminar_usuario);
 
-api.post("/login", UsuariosController.crear_usuario);
-api.post("/logout", UsuariosController.crear_usuario);
+api.post("/login",[
+    body('email').not().isEmpty(),
+    body('pass').not().isEmpty()
+], AuthController.login);
+api.post("/logout", AuthController.logout);
 module.exports = api;

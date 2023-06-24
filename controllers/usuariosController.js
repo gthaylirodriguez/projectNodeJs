@@ -32,7 +32,7 @@ var controller = {
     },
 
     crear_usuario: function (req, res){
-                //Validamos los datos que se envian al endpoint
+        //Validamos los datos que se envian al endpoint
         const errors = validationResult(req);
         if(!errors.isEmpty()){
             return res.status(400).json({errors: errors.array()})
