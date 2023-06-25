@@ -19,7 +19,7 @@ var controller = {
             if (!usuario) return res.status(200).json({ status: 200,  mensaje: "Los datos no son válidos" });
             
             const payload ={
-                user_id : usuario.id
+                usuario_id : usuario.id
             };
 
             const access_token = jwt.sign(payload, 'TV9L0kB46idk6yS7S6vIT17jaHBhLBflwhX2YAGH4Lpb7gWtBr', {
@@ -32,19 +32,25 @@ var controller = {
             };
 
             Sessions.findOneAndUpdate({usuario_id: usuario.id}, update, {upsert: true, new: true}, (err, sessionsUpdate)=>{
-                if (err) return res.status(500).send({message:err});
+                if (err) return res.status(500).send({message: err});
                 if (!sessionsUpdate) return res.status(404).send({message: 'Datos incorrectos'});
+                return res.status(200).json({
+                    status: 200,
+                    data: 'Autentificación correcta',
+                    token: access_token
+                }); 
             });
-
-            return res.status(200).json({
-                status: 200,
-                data: 'Usuario logeado',
-                token: access_token
-            }); 
         });
     },
 
     logout: function (req, res){
+
+        Sessions.findOneAndRemove({usuario_id: req.decoded.usuario_id}, (err, usuarioDeleted)=> {
+            if (err) return res.status(500).send({message: err});
+            if (!usuarioDeleted) return res.status(404).send({message: "Datos erróneos logout"});
+
+            return res.status(200).send({message: 'Sesión cerrada'});
+        });
         
     }
     

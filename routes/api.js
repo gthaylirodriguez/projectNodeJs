@@ -32,5 +32,5 @@ api.post("/login",[
     body('email').not().isEmpty(),
     body('pass').not().isEmpty()
 ], AuthController.login);
-api.post("/logout", AuthController.logout);
+api.post("/logout", userProtectUrl,  AuthController.logout);
 module.exports = api;
