@@ -1,6 +1,7 @@
 'use strict'
 const jwt = require('jsonwebtoken');
 const {validationResult} = require('express-validator');
+const bcrypt = require('bcrypt');
 
 var Usuarios = require('../models/usuarios');
 var Sessions = require('../models/sessions');
@@ -14,10 +15,11 @@ var controller = {
         }
 
         let info_login = req.body;
-        Usuarios.findOne({email:  info_login.email, pass: info_login.pass}).exec((err, usuario)=>{
+        Usuarios.findOne({email:  info_login.email}).exec((err, usuario)=>{
             if (err) return res.status(500).json({ status: 500,  mensaje: err  });
             if (!usuario) return res.status(200).json({ status: 200,  mensaje: "Los datos no son válidos" });
-            
+            if (!bcrypt.compareSync(info_login.pass, usuario.pass)){ return res.status(400).json({ mensaje: "Contraseña incorrectos"} )};
+
             const payload ={
                 usuario_id : usuario.id
             };

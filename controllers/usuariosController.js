@@ -1,8 +1,9 @@
 'use strict'
 
 const {validationResult} = require('express-validator');
-
+const bcrypt = require('bcrypt');
 var Usuarios = require('../models/usuarios')
+const bc_salt_round = 10;
 
 var controller = {
     usuarios: function (req, res){
@@ -49,7 +50,10 @@ var controller = {
             usuario_model.nombre = info_usuario.nombre;
             usuario_model.email = info_usuario.email;
             usuario_model.edad = info_usuario.edad;
-            usuario_model.pass = info_usuario.pass;
+            //usuario_model.pass = info_usuario.pass;
+            const new_hash = bcrypt.hashSync(info_usuario.pass, bc_salt_round);
+            console.log(new_hash);
+            usuario_model.pass = new_hash;
 
             usuario_model.save((err, usuarioStored)=>{
                 if (err) return res.status(500).json({ status: 500,  mensaje: err  });
